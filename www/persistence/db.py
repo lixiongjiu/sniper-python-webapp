@@ -205,6 +205,17 @@ class _ConnectionCtx(object):
         if self.should_cleanup:
             _db_ctx.cleanup()
 
+
+def connection():
+    '''
+    返回_ConnectionCtx对象，可用于with语句
+    例如：
+    with connection():
+        pass
+    '''
+    return _ConnectionCtx()
+
+
 def with_connection(func):
     '''
     Decorator:connection的装饰器，形成@注解的方式来管理connection对象的初始化和回收
@@ -265,6 +276,19 @@ class _TransactionCtx(object):
         logging.info('rollback ok.')
 
 
+
+
+def transaction():
+    '''
+    返回_Transaction对象，用于with语句
+    例如：
+    with transaction():
+        pass
+    '''
+    return _TransactionCtx()
+
+
+
 def with_transaction(func):
     '''
     将事务管理的with形式升级为装饰器模式
@@ -303,8 +327,8 @@ def _select(sql,first,*args):
                 return None
             return Dict(name,values)
 
-        #select more than one
-        return [Dict(name,x) for xx in cursor.fetchall()]
+        #select more than one,这里的每个x是一个元组
+        return [Dict(name,x) for x in cursor.fetchall()]
 
     finally:
         if cursor:
