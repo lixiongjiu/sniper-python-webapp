@@ -165,11 +165,11 @@ def _gen_sql(table_name,mappings):
 
         ddl=f.ddl
         nullable=f.nullable
-        default=' default `%s`'% f.default
+        # default=' default `%s`'% f.default
         if f.primary_key:
             pk=f.name
 
-        sql.append((nullable and ' %s %s' % (f.name,ddl) or ' %s %s not null' % (f.name,ddl))+default)
+        sql.append(nullable and ' %s %s' % (f.name,ddl,) or ' %s %s not null,' % (f.name,ddl))
 
     sql.append(' primary key(%s)' % pk)
     sql.append(');')
